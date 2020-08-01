@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    app:startDestination="@id/characterFragment">
+    <fragment
+        android:id="@+id/characterFragment"
+        android:name="com.example.marvel.characterScreen.CharacterFragment"
+        android:label="Characters" />
+    <fragment
+        android:id="@+id/comicFragment"
+        android:name="com.example.marvel.comicScreen.ComicFragment"
+        android:label="Comics" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.example.marvel.eventsScreen.EventFragment"
+        android:label="Events" />
+</navigation>
