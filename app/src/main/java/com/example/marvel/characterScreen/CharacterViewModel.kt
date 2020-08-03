@@ -4,17 +4,12 @@ import android.app.Application
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.marvel.database.getDatabase
 import com.example.marvel.repository.CharacterRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class CharacterViewModel(private val application: Application, private val activity: FragmentActivity) : ViewModel() {
-
-    private val viewModelJob = SupervisorJob()
-    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     private val database = getDatabase(application)
     private val characterRepository = CharacterRepository(database,activity)
@@ -27,11 +22,6 @@ class CharacterViewModel(private val application: Application, private val activ
     }
 
     val charactersList = characterRepository.characters
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
 
     class Factory(private val app: Application, private val activity: FragmentActivity) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
