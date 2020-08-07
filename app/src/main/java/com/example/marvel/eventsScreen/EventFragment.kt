@@ -1,6 +1,8 @@
 package com.example.marvel.eventsScreen
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -28,7 +30,7 @@ class EventFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProvider(this, EventViewModel.Factory(activity.application,activity))
+        ViewModelProvider(this, EventViewModel.Factory(activity.application))
             .get(EventViewModel::class.java)
     }
 
@@ -55,9 +57,24 @@ class EventFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel.eventsList.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.submitList(it)
+            }
+        })
+
+        viewModel.exception.observe(viewLifecycleOwner, Observer {
+            it?.let {e->
+                val builder = AlertDialog.Builder(activity)
+                builder.setMessage(e.message)
+                builder.setCancelable(true)
+                builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
+                    dialog?.cancel()
+                    viewModel.finishedDialog()
+                }
+                val alert = builder.create()
+                alert.show()
             }
         })
     }

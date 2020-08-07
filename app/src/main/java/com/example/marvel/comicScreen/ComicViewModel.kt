@@ -1,33 +1,44 @@
 package com.example.marvel.comicScreen
 
 import android.app.Application
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.marvel.database.getDatabase
 import com.example.marvel.repository.ComicsRepository
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class ComicViewModel(private val application: Application, private val activity: FragmentActivity) : ViewModel() {
+class ComicViewModel(application: Application) : ViewModel() {
 
     private val database = getDatabase(application)
-    private val comicsRepository = ComicsRepository(database,activity)
+    private val comicsRepository = ComicsRepository(database)
+
+    private val _exception = MutableLiveData<Exception>()
+
+    val exception : LiveData<Exception>
+    get() = _exception
 
 
     init {
         viewModelScope.launch {
-            comicsRepository.refreshComics()
+            try {
+                comicsRepository.refreshComics()
+            } catch (e : Exception) {
+                _exception.value = e
+            }
         }
+    }
+
+    fun finishedDialog() {
+        _exception.value = null
     }
 
     val comicsList = comicsRepository.comics
 
-    class Factory(private val app: Application, private val activity: FragmentActivity) : ViewModelProvider.Factory {
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ComicViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return ComicViewModel(app,activity) as T
+                return ComicViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

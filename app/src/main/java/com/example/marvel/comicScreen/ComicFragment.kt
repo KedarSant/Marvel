@@ -1,5 +1,7 @@
 package com.example.marvel.comicScreen
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,7 +25,7 @@ class ComicFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProvider(this, ComicViewModel.Factory(activity.application,activity))
+        ViewModelProvider(this, ComicViewModel.Factory(activity.application))
             .get(ComicViewModel::class.java)
     }
 
@@ -49,12 +51,27 @@ class ComicFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+
         super.onActivityCreated(savedInstanceState)
+
         viewModel.comicsList.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.submitList(it)
             }
         })
-    }
 
+        viewModel.exception.observe(viewLifecycleOwner, Observer {
+            it?.let {e->
+                val builder = AlertDialog.Builder(activity)
+                builder.setMessage(e.message)
+                builder.setCancelable(true)
+                builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
+                    dialog?.cancel()
+                    viewModel.finishedDialog()
+                }
+                val alert = builder.create()
+                alert.show()
+            }
+        })
+    }
 }

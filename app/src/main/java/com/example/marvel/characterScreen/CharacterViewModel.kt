@@ -1,33 +1,44 @@
 package com.example.marvel.characterScreen
 
 import android.app.Application
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.marvel.database.getDatabase
 import com.example.marvel.repository.CharacterRepository
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class CharacterViewModel(private val application: Application, private val activity: FragmentActivity) : ViewModel() {
+class CharacterViewModel(application: Application) : ViewModel() {
 
     private val database = getDatabase(application)
-    private val characterRepository = CharacterRepository(database,activity)
+    private val characterRepository = CharacterRepository(database)
+
+    private val _exception = MutableLiveData<Exception>()
+
+    val exception : LiveData<Exception>
+    get() = _exception
 
 
     init {
         viewModelScope.launch {
-            characterRepository.refreshCharacters()
+            try {
+                characterRepository.refreshCharacters()
+            } catch (e : Exception) {
+                _exception.value = e
+            }
         }
+    }
+
+    fun finishDialog() {
+        _exception.value= null
     }
 
     val charactersList = characterRepository.characters
 
-    class Factory(private val app: Application, private val activity: FragmentActivity) : ViewModelProvider.Factory {
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(CharacterViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return CharacterViewModel(app,activity) as T
+                return CharacterViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

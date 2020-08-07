@@ -1,5 +1,7 @@
 package com.example.marvel.characterScreen
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,7 +29,7 @@ class CharacterFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProvider(this, CharacterViewModel.Factory(activity.application,activity))
+        ViewModelProvider(this, CharacterViewModel.Factory(activity.application))
             .get(CharacterViewModel::class.java)
     }
 
@@ -54,9 +56,24 @@ class CharacterFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel.charactersList.observe(viewLifecycleOwner, Observer {
             it?.let{
                 adapter.submitList(it)
+            }
+        })
+
+        viewModel.exception.observe(viewLifecycleOwner, Observer {
+            it?.let {e->
+                val builder = AlertDialog.Builder(activity)
+                builder.setMessage(e.message)
+                builder.setCancelable(true)
+                builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
+                    dialog?.cancel()
+                    viewModel.finishDialog()
+                }
+                val alert = builder.create()
+                alert.show()
             }
         })
     }

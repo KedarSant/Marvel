@@ -1,8 +1,5 @@
 package com.example.marvel.repository
 
-import android.app.AlertDialog
-import android.content.DialogInterface
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.example.marvel.database.MarvelDatabase
@@ -17,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class CharacterRepository(private val database: MarvelDatabase, private val activity : FragmentActivity) {
+class CharacterRepository(private val database: MarvelDatabase) {
 
     private lateinit var characterWrapper: CharacterDataWrapper
 
@@ -33,19 +30,12 @@ class CharacterRepository(private val database: MarvelDatabase, private val acti
                 characterWrapper.asDatabaseCharacter()?.let { database.characterDao.insertCharacters(*it) }
             }
         } catch (e : Exception) {
-            val builder = AlertDialog.Builder(activity)
-            builder.setMessage(e.message)
-            builder.setCancelable(true)
-            builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
-                dialog?.cancel()
-            }
-            val alert = builder.create()
-            alert.show()
+            throw(e)
         }
     }
 }
 
-class ComicsRepository(private val database: MarvelDatabase, private val activity : FragmentActivity) {
+class ComicsRepository(private val database: MarvelDatabase) {
 
     private lateinit var comicWrapper: ComicDataWrapper
 
@@ -61,19 +51,12 @@ class ComicsRepository(private val database: MarvelDatabase, private val activit
                 comicWrapper.asDatabaseComic()?.let { database.comicsDao.insertComics(*it) }
             }
         } catch (e : Exception) {
-            val builder = AlertDialog.Builder(activity)
-            builder.setMessage(e.message)
-            builder.setCancelable(true)
-            builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
-                dialog?.cancel()
-            }
-            val alert = builder.create()
-            alert.show()
+            throw(e)
         }
     }
 }
 
-class EventsRepository(private val database: MarvelDatabase, private val activity : FragmentActivity) {
+class EventsRepository(private val database: MarvelDatabase) {
 
     private lateinit var eventWrapper: EventDataWrapper
 
@@ -89,14 +72,7 @@ class EventsRepository(private val database: MarvelDatabase, private val activit
                 eventWrapper.asDatabaseEvent()?.let { database.eventsDao.insertEvents(*it) }
             }
         } catch (e : Exception) {
-            val builder = AlertDialog.Builder(activity)
-            builder.setMessage(e.message)
-            builder.setCancelable(true)
-            builder.setPositiveButton("Ok") { dialog: DialogInterface?, _: Int ->
-                dialog?.cancel()
-            }
-            val alert = builder.create()
-            alert.show()
+            throw (e)
         }
     }
 }
