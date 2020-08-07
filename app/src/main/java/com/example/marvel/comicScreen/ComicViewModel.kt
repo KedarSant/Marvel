@@ -1,8 +1,6 @@
 package com.example.marvel.comicScreen
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.example.marvel.database.getDatabase
 import com.example.marvel.repository.ComicsRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception

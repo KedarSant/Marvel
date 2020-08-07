@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 import com.example.marvel.domain.Character
 import com.example.marvel.domain.Comic
 import com.example.marvel.domain.Event
-import com.example.marvel.network.Image
 
 
 @Entity
