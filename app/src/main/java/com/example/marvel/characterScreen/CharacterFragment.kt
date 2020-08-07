@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marvel.R
 import com.example.marvel.databinding.CharacterFragmentBinding
 import com.example.marvel.util.ProductGridItemDecoration
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CharacterFragment : Fragment() {
 
@@ -25,13 +25,7 @@ class CharacterFragment : Fragment() {
     private lateinit var binding : CharacterFragmentBinding
     private lateinit var adapter: CharacterAdapter
 
-    private val viewModel: CharacterViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProvider(this, CharacterViewModel.Factory(activity.application))
-            .get(CharacterViewModel::class.java)
-    }
+    private val viewModel: CharacterViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

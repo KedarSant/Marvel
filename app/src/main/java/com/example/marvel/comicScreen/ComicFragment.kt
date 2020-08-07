@@ -9,25 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marvel.util.ProductGridItemDecoration
 import com.example.marvel.R
 import com.example.marvel.databinding.ComicFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ComicFragment : Fragment() {
 
     private lateinit var binding : ComicFragmentBinding
     private lateinit var adapter: ComicAdapter
 
-    private val viewModel: ComicViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProvider(this, ComicViewModel.Factory(activity.application))
-            .get(ComicViewModel::class.java)
-    }
+    private val viewModel: ComicViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -7,16 +7,12 @@ import com.example.marvel.repository.EventsRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class EventViewModel(private val application: Application) : ViewModel() {
-
-    private val database = getDatabase(application)
-    private val eventsRepository = EventsRepository(database)
+class EventViewModel(eventsRepository: EventsRepository) : ViewModel() {
 
     private val _exception = MutableLiveData<Exception>()
 
     val exception : LiveData<Exception>
     get() = _exception
-
 
     init {
         viewModelScope.launch {
@@ -33,14 +29,4 @@ class EventViewModel(private val application: Application) : ViewModel() {
     }
 
     val eventsList = eventsRepository.events
-
-    class Factory(private val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(EventViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return EventViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
 }

@@ -10,12 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marvel.R
 import com.example.marvel.databinding.EventFragmentBinding
 import com.example.marvel.util.ProductGridItemDecoration
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EventFragment : Fragment() {
 
@@ -26,13 +26,7 @@ class EventFragment : Fragment() {
     private lateinit var binding : EventFragmentBinding
     private lateinit var adapter: EventAdapter
 
-    private val viewModel: EventViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProvider(this, EventViewModel.Factory(activity.application))
-            .get(EventViewModel::class.java)
-    }
+    private val viewModel: EventViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

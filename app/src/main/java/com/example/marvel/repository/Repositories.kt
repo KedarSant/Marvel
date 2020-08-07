@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class CharacterRepository(private val database: MarvelDatabase) {
+class CharacterRepository(private val database: MarvelDatabase,private val service: MarvelApiService) {
 
     private lateinit var characterWrapper: CharacterDataWrapper
 
@@ -26,7 +26,7 @@ class CharacterRepository(private val database: MarvelDatabase) {
     suspend fun refreshCharacters() {
         try {
             withContext(Dispatchers.IO) {
-                characterWrapper = Network.info.getCharactersAsync(Network.ts,Network.apikey,Network.hash,100).await()
+                characterWrapper = service.getCharactersAsync().await()
                 characterWrapper.asDatabaseCharacter()?.let { database.characterDao.insertCharacters(*it) }
             }
         } catch (e : Exception) {
@@ -35,7 +35,7 @@ class CharacterRepository(private val database: MarvelDatabase) {
     }
 }
 
-class ComicsRepository(private val database: MarvelDatabase) {
+class ComicsRepository(private val database: MarvelDatabase,private val service: MarvelApiService) {
 
     private lateinit var comicWrapper: ComicDataWrapper
 
@@ -47,7 +47,7 @@ class ComicsRepository(private val database: MarvelDatabase) {
     suspend fun refreshComics() {
         try {
             withContext(Dispatchers.IO) {
-                comicWrapper = Network.info.getComicsAsync(Network.ts,Network.apikey,Network.hash,100).await()
+                comicWrapper = service.getComicsAsync().await()
                 comicWrapper.asDatabaseComic()?.let { database.comicsDao.insertComics(*it) }
             }
         } catch (e : Exception) {
@@ -56,7 +56,7 @@ class ComicsRepository(private val database: MarvelDatabase) {
     }
 }
 
-class EventsRepository(private val database: MarvelDatabase) {
+class EventsRepository(private val database: MarvelDatabase,private val service: MarvelApiService) {
 
     private lateinit var eventWrapper: EventDataWrapper
 
@@ -68,7 +68,7 @@ class EventsRepository(private val database: MarvelDatabase) {
     suspend fun refreshEvents() {
         try {
             withContext(Dispatchers.IO) {
-                eventWrapper = Network.info.getEventsAsync(Network.ts,Network.apikey,Network.hash,100).await()
+                eventWrapper = service.getEventsAsync().await()
                 eventWrapper.asDatabaseEvent()?.let { database.eventsDao.insertEvents(*it) }
             }
         } catch (e : Exception) {
