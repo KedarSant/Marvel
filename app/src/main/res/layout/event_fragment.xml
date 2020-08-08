@@ -9,6 +9,11 @@
             type="com.example.marvel.eventsScreen.EventViewModel" />
     </data>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeLayout">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,4 +34,5 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

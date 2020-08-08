@@ -88,5 +88,7 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
 
+    //Background scheduling
+    implementation "android.arch.work:work-runtime-ktx:$version_work"
 
 }

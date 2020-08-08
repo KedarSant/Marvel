@@ -22,6 +22,7 @@ buildscript {
         version_timber = "4.7.1"
         version_glide = "4.11.0"
         koin_version = '2.1.6'
+        version_work = "2.4.0"
 
     }
     repositories {

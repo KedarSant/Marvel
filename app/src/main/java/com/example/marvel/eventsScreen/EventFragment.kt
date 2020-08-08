@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.marvel.R
 import com.example.marvel.databinding.EventFragmentBinding
 import com.example.marvel.util.ProductGridItemDecoration
@@ -25,6 +26,7 @@ class EventFragment : Fragment() {
 
     private lateinit var binding : EventFragmentBinding
     private lateinit var adapter: EventAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val viewModel: EventViewModel by viewModel()
 
@@ -34,6 +36,7 @@ class EventFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.event_fragment,container,false)
         binding.viewModel = viewModel
+        swipeRefreshLayout = binding.swipeLayout
         adapter = EventAdapter()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setHasFixedSize(true)
@@ -69,6 +72,17 @@ class EventFragment : Fragment() {
                 }
                 val alert = builder.create()
                 alert.show()
+            }
+        })
+
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
+        viewModel.refreshing.observe(viewLifecycleOwner, Observer {
+            it?.let {isRefreshing->
+                swipeRefreshLayout.isRefreshing = isRefreshing
+                viewModel.doneRefreshing()
             }
         })
     }
